@@ -1,5 +1,6 @@
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -7,19 +8,36 @@ import java.net.Socket;
 public class Server{
 
     ServerSocket server = null;
-    Socket connection = null;
+    Socket client = null;
     
     public void open(int port){
         try {
             this.server = new ServerSocket(port);
             System.out.println("Waiting for clients to connect...");
             
-            this.connection = this.server.accept();
+            this.client = this.server.accept();
+            handleClient(this.client);
             System.out.println("Client accepted!");
 
-            InputStreamReader input = new InputStreamReader(this.connection.getInputStream());
-            BufferedReader reader = new BufferedReader(input);
-            PrintWriter writer = new PrintWriter(connection.getOutputStream(), true);
+            server.close();
+
+            System.out.println("Client disconnected");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleClient(Socket socket) throws IOException {
+
+        InputStreamReader input = null;
+        BufferedReader reader = null;
+        PrintWriter writer = null;
+
+        try{
+            input = new InputStreamReader(this.client.getInputStream());
+            reader = new BufferedReader(input);
+            writer = new PrintWriter(client.getOutputStream(), true);
 
             writer.println("Hello! You do now have contact with the server!");
             writer.println("Write two numbers that you want to add or subtract, for example: 13 37");
@@ -33,7 +51,7 @@ public class Server{
 
                 writer.println("Do you want to add or subtract these numbers? write + or -");
                 String userInput = reader.readLine();
-                
+                    
                 if(userInput.equals("+")){
                     writer.println("Answer is: " + (number1 + number2));
                     writer.println("You may write two more numbers or write exit to quit");
@@ -43,15 +61,19 @@ public class Server{
                 }
                 line = reader.readLine();
             }
-
-            reader.close();
-            writer.close();
-            connection.close();
-
-            System.out.println("Client disconnected");
-
-        } catch (Exception e) {
+        }catch(IOException e){
             e.printStackTrace();
+        }finally{
+            
+            if(reader != null){
+                reader.close();
+            }
+            if(writer != null){
+                writer.close();
+            }
+
+            client.close();
+            
         }
     }
 

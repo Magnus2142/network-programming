@@ -6,22 +6,22 @@ import java.net.Socket;
 
 public class ServerThread extends Thread {
 
-    Socket socket;
+    Socket client;
 
     public ServerThread(Socket clientSocket){
-        this.socket = clientSocket;
+        this.client = clientSocket;
     }
 
     @Override
-    public void run(){
+    public void run() {
         InputStreamReader input = null;
         BufferedReader reader = null;
         PrintWriter writer = null;
 
         try{
-            input = new InputStreamReader(socket.getInputStream());
+            input = new InputStreamReader(client.getInputStream());
             reader = new BufferedReader(input);
-            writer = new PrintWriter(socket.getOutputStream(), true);
+            writer = new PrintWriter(client.getOutputStream(), true);
 
             writer.println("Hello! You do now have contact with the server!");
             writer.println("Write two numbers that you want to add or subtract, for example: 13 37");
@@ -46,14 +46,30 @@ public class ServerThread extends Thread {
                 line = reader.readLine();
             }
 
-            reader.close();
-            writer.close();
-            socket.close();
-
             System.out.println("Client disconnected");
             
         }catch(IOException e){
             e.printStackTrace();
+        }finally{
+            if(reader != null){
+                try{
+                    reader.close();
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+            if(writer != null){
+                try{
+                    writer.close();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            try{
+                client.close();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
     }
     
