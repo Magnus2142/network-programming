@@ -48,6 +48,11 @@ public class UDPServer {
                     packet = new DatagramPacket(buffer, buffer.length, clientAddress, clientPort);
                     socket.send(packet);
                     recieved = "exit";
+                }else if(calculation.length == 1){
+                    buffer = "Wrong format, exiting...".getBytes();
+                    packet = new DatagramPacket(buffer, buffer.length, clientAddress, clientPort);
+                    socket.send(packet);
+                    recieved = "exit";
                 }else if(!calculation[1].equals("+") && !calculation[1].equals("-")){
                     buffer = "Can only add or subtract the numbers: (+ or -) or wrong format, exiting...".getBytes();
                     packet = new DatagramPacket(buffer, buffer.length, clientAddress, clientPort);

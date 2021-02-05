@@ -52,9 +52,6 @@ public class WebServer {
 
             System.out.println("Welcome message sent.");
 
-            reader.close();
-            writer.close();
-            client.close();
         }catch(IOException e){
             e.printStackTrace();
         }finally{

@@ -48,6 +48,11 @@ public class UDPClient {
             buffer = new byte[512];
             DatagramPacket calcResponsePacket = new DatagramPacket(buffer, buffer.length);
             socket.receive(calcResponsePacket);
+            try {
+                Integer.parseInt(new String(calcResponsePacket.getData(), 0, calcResponsePacket.getLength()));
+            } catch (Exception e) {
+                running = false;
+            }
             String calcAnswer = new String(calcResponsePacket.getData(), 0, calcResponsePacket.getLength());
             System.out.println(calcAnswer);
         }
