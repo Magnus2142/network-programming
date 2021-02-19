@@ -16,9 +16,8 @@ public class Server{
             System.out.println("Waiting for clients to connect...");
             
             this.client = this.server.accept();
-            handleClient(this.client);
             System.out.println("Client accepted!");
-
+            handleClient(this.client);
             server.close();
 
             System.out.println("Client disconnected");
