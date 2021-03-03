@@ -45,12 +45,34 @@ public class WebServer {
                 writer.print("<li>" + request[i] + "</li>\r\n");
             }
             writer.print("</ul>\r\n");
+            writer.print("<textarea id=\"w3review\" name=\"w3review\" rows=\"4\" cols=\"50\">\r\n");
+            writer.print("At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.\r\n");
+            writer.print("</textarea>\r\n");
             writer.print("</body></html>\r\n");
             writer.print("\r\n\r\n");
 
             writer.flush();
 
             System.out.println("Welcome message sent.");
+            
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("bash", "-c", "ls /home/magnus/");
+
+            try {
+                Process process = processBuilder.start();
+
+                BufferedReader processReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+                String processLine;
+                while((processLine = processReader.readLine()) != null){
+                    System.out.println(processLine);
+                }
+
+                int exitCode = process.waitFor();
+                System.out.println("\nExited with error code : " + exitCode);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }catch(IOException e){
             e.printStackTrace();
