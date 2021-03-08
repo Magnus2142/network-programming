@@ -1,0 +1,80 @@
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <meta charset="UTF-8" />
+            </head>
+            <body style="display: flex;flex-direction: column;align-items: center;justify-content: center;">
+                <h1>WebSocket drawing-chatting-room :D</h1>
+                <div style="display: flex;flex-direction: row;">
+                    <p style="padding-right: 20px">Your color on this canvas is:</p>
+                    <div style="width: 20px; height: 20px; border: solid 3px black; border-radius: 3px;margin-top: 12px;" id="color-box"></div>
+                </div>
+                <canvas id="myPics" width="560" height="360" style="border: 1px solid black;width: 560px;height: 360px;"></canvas>
+                <script>
+
+                    let isDrawing = false;
+                    let x = 0;
+                    let y = 0;
+                    let drawingColor = getRandomColor();
+
+                    document.querySelector("#color-box").style.backgroundColor = drawingColor;
+
+                    const myPics = document.querySelector('#myPics');
+                    const context = myPics.getContext('2d');
+
+                    let ws = new WebSocket('ws://localhost:3001');
+                    
+                    ws.onmessage = event => {
+                        let coordinates = event.data.split("\"")[1].split(",");
+                        console.log(typeof coordinates[4]);
+                        drawLine(context, parseInt(coordinates[0], 10), parseInt(coordinates[1], 10), parseInt(coordinates[2], 10), parseInt(coordinates[3], 10), coordinates[4]);
+                    }                    
+
+                    myPics.addEventListener("mousedown", e => {
+                        x = e.offsetX;
+                        y = e.offsetY;
+                        isDrawing = true;
+                    });
+
+                    myPics.addEventListener("mousemove", e => {
+                        if(isDrawing === true){
+                            drawLine(context, x, y, e.offsetX, e.offsetY, drawingColor);
+                            ws.send(x + "," + y + "," + e.offsetX + "," + e.offsetY + "," + drawingColor);
+                            x = e.offsetX;
+                            y = e.offsetY;
+                        }
+                    });
+
+                    window.addEventListener("mouseup", e => {
+                        if (isDrawing === true) {
+                            drawLine(context, x, y, e.offsetX, e.offsetY, drawingColor);
+                            ws.send(x + "," + y + "," + e.offsetX + "," + e.offsetY + "," + drawingColor);
+                            x = 0;
+                            y = 0;
+                            isDrawing = false;
+                        }
+                    });
+
+
+                    function drawLine(context, x1, y1, x2, y2, color) {
+                        context.beginPath();
+                        context.strokeStyle = color;
+                        context.lineWidth = 1;
+                        context.moveTo(x1, y1);
+                        context.lineTo(x2, y2);
+                        context.stroke();
+                        context.closePath();
+                    }
+
+                    function getRandomColor() {
+                        var letters = '0123456789ABCDEF';
+                        var color = '#';
+                        for (var i = 0; i < 6; i++) {
+                            color += letters[Math.floor(Math.random() * 16)];
+                        }
+                        return color;
+                    }
+
+                </script>
+            </body>
+        </html>

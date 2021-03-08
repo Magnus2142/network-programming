@@ -1,8 +1,8 @@
+// Your First C++ Program
+
 #include <iostream>
 
-int main(){
-   for(int i = 0; i < 20; i ++){
-      std::cout << "Mattias er gay" << std::endl;
-   }
-
+int main() {
+    std::cout << "Hello World!";
+    return 0;
 }

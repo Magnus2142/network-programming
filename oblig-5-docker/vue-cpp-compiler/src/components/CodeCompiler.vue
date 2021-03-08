@@ -1,7 +1,9 @@
 <template>
     <div class="container">
         <h1>Monster Code Compiler 3000</h1>
-        <textarea class="code-input" id="code-input" placeholder="Write code here..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Write code here...'"/>
+        <textarea class="code-input" id="code-input" placeholder="Write code here..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Write code here...'">
+            
+        </textarea>
 
         <div class="button-container">
             <button id="compile-button" class="btn btn-primary btn-lg btn-block" @click="compileCode()">Compile</button>
