@@ -41,11 +41,15 @@ const wsServer = net.createServer((connection) => {
 
             console.log("Upgraded to websocket!");
         }else{
-            const message = decryptMessage(data);
-            console.log(message);
+            let textType = Buffer.from(data)[0];
 
-            let response = constructReply(message);
-            connectedSockets.broadcast(response, connection);
+            if(textType == 129){
+                const message = decryptMessage(data);
+                console.log(message);
+    
+                let response = constructReply(message);
+                connectedSockets.broadcast(response, connection);
+            }
         }
     });
 
