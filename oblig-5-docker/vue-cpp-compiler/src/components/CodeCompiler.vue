@@ -24,25 +24,26 @@ export default {
   methods: {
     compileCode(){
 
-      let compileButton = document.querySelector("#compile-button");
-      let compileSpinner = document.querySelector("#spinner");
-      let code = {
-        "code" : document.querySelector("#code-input").value
-      }
+        let compileButton = document.querySelector("#compile-button");
+        let compileSpinner = document.querySelector("#spinner");
+        let code = {
+            "code" : document.querySelector("#code-input").value
+        }
 
-      compileButton.style.backgroundColor = "#d8d8d8";
-      compileSpinner.style.display = "block";
+        compileButton.style.backgroundColor = "#d8d8d8";
+        compileSpinner.style.display = "block";
 
-      console.log(document.querySelector("#code-input").value);
+        console.log(document.querySelector("#code-input").value);
 
 
-      // Simple POST request with a JSON body using fetch
-      const requestOptions = {
+        // Simple POST request with a JSON body using fetch
+        const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(code)
-      };
-      fetch("http://localhost:8080/compile", requestOptions)
+        };
+
+        fetch("http://localhost:8080/compile", requestOptions)
         .then(response => response.json())
         .then(data => {
             console.log(data);
